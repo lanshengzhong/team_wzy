@@ -3,7 +3,7 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" :show-timeout="20" trigger="hover">
-      <!-- 账号信息 只有名字没有头像 -->
+      <!-- 账号信息 -->
       <div class="avatar-wrapper">
         <span class="user-name">{{userinfo.nickname}}</span>
         <svg-icon icon-class="out"/>
@@ -84,6 +84,9 @@ export default {
     font-size: 16px;
     .avatar-wrapper {
       cursor: pointer;
+      .user-name {
+        margin-right: 10px;
+      }
     }
   }
 }

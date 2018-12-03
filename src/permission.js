@@ -1,29 +1,38 @@
 import router from './router'
-// import store from './store'
+import $store from './store'
+import store from 'store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-// import { Message } from 'element-ui'
-import { getToken } from '@/utils/auth' // 验权
+import TokenFun from '@/utils/auth' // token
+
+// 注意 store $store
 
 const whiteList = ['/login'] // 不重定向白名单
+
 router.beforeEach((to, from, next) => {
+  // 开始Progress
   NProgress.start()
-  if (getToken()) {
+  if (TokenFun.getToken()) {
+    // 本地用户信息
+    if (store.get('userinfo')) {
+      $store.commit('SET_USER_INFO', store.get('userinfo'))
+    }
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done() // if current page is home will not trigger afterEach hook, so manually handle it
+      NProgress.done()
     } else {
-      // 因为登录的时候就返回了用户信息 就不需要做下面的操作了 直接next()
-      // if (store.getters.roles.length === 0) {
-      //   store.dispatch('GetInfo').then(res => { // 拉取用户信息
-      //     next()
-      //   }).catch((err) => {
-      //     store.dispatch('FedLogOut').then(() => {
-      //       Message.error(err || 'Verification failed, please login again')
-      //       next({ path: '/' })
-      //     })
-      //   })
-      // }
+      // 判断是否已生成可访问的路由表
+      if ($store.getters.addRouters.length === 0) {
+        // 生成可访问的路由表
+        $store.dispatch('GenerateRoutes', $store.getters.menu).then(() => {
+          // 动态添加可访问路由表
+          router.addRoutes($store.getters.addRouters)
+          // hack方法 确保addRoutes已完成
+          next({ ...to, replace: true })
+        })
+      } else {
+        next()
+      }
       next()
     }
   } else {
@@ -37,5 +46,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
-  NProgress.done() // 结束Progress
+  // 结束Progress
+  NProgress.done()
 })

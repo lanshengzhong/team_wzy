@@ -6,6 +6,7 @@ const resolve = dir => {
 }
 
 module.exports = {
+  // eslint
   lintOnSave: true,
   // 开发端口
   devServer: {
@@ -13,13 +14,9 @@ module.exports = {
   },
   // 输出文件目录
   outputDir: 'dist',
-  // 文档 https://github.com/neutrinojs/webpack-chain
-  chainWebpack: (config) => {
-    config.resolve.alias
-      .set('@', resolve('src'))
-  },
   // 打包时不生成.map文件
   productionSourceMap: false,
+  // 样式
   css: {
     loaderOptions: {
       postcss: {
@@ -28,5 +25,25 @@ module.exports = {
         ]
       }
     }
+  },
+  // 文档 https://github.com/neutrinojs/webpack-chain
+  chainWebpack: (config) => {
+    config.resolve.alias
+      .set('@', resolve('src'))
+    config.module
+      .rule('svg')
+      .exclude.add(resolve('src/icons'))
+      .end()
+    config.module
+      .rule('icons')
+      .test(/\.svg$/)
+      .include.add(resolve('src/icons'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+      .end()
   }
 }

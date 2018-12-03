@@ -65,11 +65,11 @@ export default {
       this.pwdType === 'password' ? this.pwdType = '' : this.pwdType = 'password'
     },
     handleLogin() {
-      console.log(111)
+      // 用户名登录
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
-          console.log(222)
+          // 请求登录
           this.login(this.loginForm).then(() => {
             this.loading = false
             this.$message({
@@ -82,7 +82,7 @@ export default {
           }).catch(() => {
             setTimeout(() => {
               this.loading = false
-            }, 1000)
+            }, 2000)
           })
         } else {
           console.log('error submit!!')
@@ -137,7 +137,7 @@ $light_gray:#eee;
   position: fixed;
   height: 100%;
   width: 100%;
-  background-image: url('./../../assets/bg.png');
+  background-image: url('./../../assets/images/login_bg.png');
   background-attachment:fixed;
   background-repeat:no-repeat;
   background-size:cover;

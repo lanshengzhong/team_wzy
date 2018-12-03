@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 系统 （初始化、分享）
+// 系统 （初始化）
 
 export default {
   // 分享

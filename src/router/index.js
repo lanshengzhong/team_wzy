@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// const _import = require('./_import_' + process.env.NODE_ENV)
-
-// in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
-// detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
-
-Vue.use(Router)
 
 /* Layout */
-import Layout from '../pages/layout/Layout'
+import Layout from '@/pages/layout/Layout'
+
+// 路由模块
+import boardRouter from './modules/board'
+
+Vue.use(Router)
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -22,6 +21,8 @@ import Layout from '../pages/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
+
+// 默认加载的路由 （包含登录，主页框架等）
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/pages/login/index'), hidden: true },
   { path: '/404', component: () => import('@/pages/404'), hidden: true },
@@ -36,15 +37,19 @@ export const constantRouterMap = [
     children: [{
       path: 'home',
       component: () => import('@/pages/index/index'),
-      meta: { title: '教务概况', icon: 'home' }
+      meta: { title: '首页', icon: 'home' }
     }]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  // mode: 'history', // 需要后端支持
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
 
+// 异步加载的路由 （根据用户权限判断）
+export const asyncRouterMap = [
+  boardRouter,
+  { path: '*', redirect: '/404', hidden: true }
+]
