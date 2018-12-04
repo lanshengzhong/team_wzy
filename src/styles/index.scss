@@ -68,7 +68,12 @@ a:hover {
     height: 0;
   }
 }
-
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
 //main-container全局样式
 .app-main{
   min-height: 100%
